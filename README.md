@@ -1,2 +1,7 @@
-# exp_params_mng
-Managing Experiment Parameters
+# Installation
+
+
+```
+sudo apt-get install mongodb-server
+```
+

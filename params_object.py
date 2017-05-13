@@ -9,9 +9,7 @@ from os import path as osp
 import bson
 ##3rd party
 from pyhelper_fns import path_utils
-##Self-Imports
-EXP_CLIENT = experiment_session.EXP_CLIENT
-EXP_DB     = EXP_CLIENT['experiment']
+EXP_CLIENT = pymongo.MongoClient('localhost:27900')
 
 class ParamsObject(object):
   __metaclass__ = abc.ABCMeta
@@ -32,7 +30,8 @@ class ParamsObject(object):
     assert len(set(self._RESERVED_PARAM_NAMES_).intersection(set(defaultKeys))) == 0
     self._params['usertag'] = usertag
     #Initial the database collection
-    self._dbColl = EXP_DB[self.name]
+    self._expDb  = EXP_CLIENT[self.projectName]
+    self._dbColl = self._expDb[self.name]
     #Check consistency
     self.check_params_consistency() 
 
@@ -127,6 +126,12 @@ class ParamsObject(object):
     return type(self).__name__
 
   @abc.abstractproperty
+  def projectName(self):
+    """
+    Returns the name of the project
+    """
+
+  @abc.abstractproperty
   def ignoreHashKeys(self):
     """
     Returns:
@@ -149,6 +154,14 @@ class ParamsObject(object):
       _id = bson.objectid.ObjectId(_id)
     assert type(_id) is bson.objectid.ObjectId  
     return self.dbColl.find({'_id': _id})
+
+  def from_id(self, _id):
+    """ 
+    Return the entry by the _id
+    """
+    cur = self.find_by_id(_id)
+    assert cur.count() == 1
+    return cur.next()
 
   def delete_by_id(self, _id):
     cur = self.find_by_id(_id)

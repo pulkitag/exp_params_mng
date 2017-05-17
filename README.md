@@ -18,4 +18,8 @@ import pymongo
 client = pymongo.MongoClient('locahost:27900')
 ```
 
+Relevant links
+```
+http://stackoverflow.com/questions/37014186/running-mongodb-on-ubuntu-16-04-lts
+```
 

@@ -12,6 +12,19 @@ First start a mongo server,
 mongod --port=27900 --dbpath=/path/to/db/store
 ```
 
+Alternatively, options can be specified in `/etc/mongod.conf` and the
+mongod server can be started as
+
+```
+mongod --config /etc/mongod.conf
+```
+
+For enabling authorization, in the `.conf` file specify:
+```
+security
+  authorization: enabled
+```
+
 Then connect with the server,
 ```python
 import pymongo

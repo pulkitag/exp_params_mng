@@ -25,6 +25,9 @@ security
   authorization: enabled
 ```
 
+In case you are using the conf file and cannot connect from 
+other machines (other than the localhost), comment out `bindIp` in the conf file. 
+
 Then connect with the server,
 ```python
 import pymongo

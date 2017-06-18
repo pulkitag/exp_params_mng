@@ -9,7 +9,8 @@ from os import path as osp
 import bson
 ##3rd party
 from pyhelper_fns import path_utils
-EXP_CLIENT = pymongo.MongoClient('localhost:27900')
+EXP_CLIENT = pymongo.MongoClient('anakin.banatao.berkeley.edu:27900')
+EXP_CLIENT['dev'].authenticate('haptics','God@Haptics01')
 
 class ParamsObject(object):
   __metaclass__ = abc.ABCMeta
@@ -80,7 +81,7 @@ class ParamsObject(object):
       for k in newKeys:
         print ('Setting all entries in {0} DB with value {1} for key {2}'.\
                format(self.name, self.params[k], k))
-        ip = raw_input('Proceed (Y/N):')
+        ip = input('Proceed (Y/N):')
         assert ip == 'Y' or ip == 'N', 'Invalid Input, Enter Y/N'
         if ip == 'Y':
           docs = self.dbColl.find()
@@ -97,7 +98,7 @@ class ParamsObject(object):
       for k in newKeys:
         print ('For all entries in {0} DB, deleting key {1}'.\
                format(self.name, k))
-        ip = raw_input('Proceed (Y/N):')
+        ip = input('Proceed (Y/N):')
         assert ip == 'Y' or ip == 'N', 'Invalid Input, Enter Y/N'
         if ip == 'Y':
           docs = self.dbColl.find()
@@ -167,7 +168,7 @@ class ParamsObject(object):
     cur = self.find_by_id(_id)
     for dat in cur:
       print ('Deleting\n {0}'.format(dat))
-      ip = raw_input('Proceed .. (Y/N)')
+      ip = input('Proceed .. (Y/N)')
       assert ip in ['Y', 'N']
       if ip == 'Y':
         self.dbColl.delete_one(dat)

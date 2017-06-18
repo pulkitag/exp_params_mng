@@ -10,7 +10,7 @@ import bson
 ##3rd party
 from pyhelper_fns import path_utils
 try:
-  import db_config
+  from . import db_config
   EXP_CLIENT = db_config.EXP_CLIENT
 except:
   EXP_CLIENT = pymongo.MongoClient('localhost:27900')

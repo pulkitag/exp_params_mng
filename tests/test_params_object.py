@@ -41,6 +41,28 @@ class DummyObject2(params_object.ParamsObject):
     dParams['d'] = 3.
     dParams['e'] = 4
     return dParams
+    
+#Place a default parameter in ignoreHashKeys    
+class DummyObject3(params_object.ParamsObject):
+  @property
+  def name(self):
+    return 'DummyObject'
+  
+  @property
+  def ignoreHashKeys(self):
+    return ['d', 'c']
+  
+  @property
+  def projectName(self):
+    return 'haptics'
+
+  def default_params(self):
+    dParams = {}
+    dParams['a'] = 0
+    dParams['b'] = 'zz'
+    dParams['c'] = 2
+    dParams['d'] = 3.
+    return dParams
 
 
 class ExperimentObjectTests(unittest.TestCase):
@@ -113,7 +135,30 @@ class ExperimentObjectTests(unittest.TestCase):
     self.assertEqual(objParamsDef['e'], 4)
     self.assertEqual(obj2.params['e'], 5)
     for i in obj1.get_all_ids():
-      obj1.delete_by_id(i, userConfirm=False)  
+      obj1.delete_by_id(i, userConfirm=False)
+      
+  
+  def test_default_to_ignore(self):
+    """
+    Test what happens when a default key
+    is moved to ignoreHashKeys
+    """
+    obj1 = DummyObject(c=2, userConfirm=False)
+    hashName1 = obj1.hash_name()
+    obj2 = DummyObject(c=3, userConfirm=False)
+    hashName1 = obj2.hash_name()
+    #Object after putting c in ignoreHashKeys
+    flag = 0
+    try:
+      objDef      = DummyObject3(userConfirm=False)
+      hashNameDef = objDef.hash_name()
+      #If this line is executed there is an error
+      self.assertEqual(0,1)
+    except params_object.CustomError:
+      flag = 1
+    self.assertEqual(flag,1)
+    
+      
   
 if __name__ == '__main__':
   unittest.main()

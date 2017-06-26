@@ -39,3 +39,9 @@ Relevant links
 http://stackoverflow.com/questions/37014186/running-mongodb-on-ubuntu-16-04-lts
 ```
 
+# Automatic Testing
+To install code for running the tests automatically before a commit run
+```
+./scripts/install-hooks.bash
+```
+

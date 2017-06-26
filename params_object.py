@@ -18,6 +18,12 @@ except:
   EXP_CLIENT = pymongo.MongoClient('localhost:27900')
   #print ('IMPORTING FROM DUNNO WHERE')
 
+class CustomError(Exception):
+  """
+  Custom Exception
+  """
+  pass
+
 class ParamsObject(object):
   __metaclass__ = abc.ABCMeta
   _RESERVED_PARAM_NAMES_ = ['name', 'usertag']
@@ -122,6 +128,21 @@ class ParamsObject(object):
       del params[k] 
     return params
 
+  def is_safe_to_delete_key(self, k):
+    """
+    A key k is safe to delete only if all 
+    the entries have the same value for key k
+    otherwise it should not be deleted
+    """
+    cur = self.dbColl.find()
+    keyVal = None
+    for i, dat in enumerate(cur):
+      if i == 0:
+        keyVal = dat[k]
+      if not keyVal == dat[k]:
+        return False
+    return True
+    
   def check_params_consistency(self):
     """
     mantain consistency of field names beween DB and default params
@@ -173,6 +194,9 @@ class ParamsObject(object):
       print ('#### Some default parameters are deleted ... ####')
       newKeys = dbKeys.difference(prKeys)
       for k in newKeys:
+        isSafe = self.is_safe_to_delete_key(k)
+        if not isSafe:
+          raise CustomError('Key %s cannot be deleted/ignored' % k)
         print ('For all entries in {0} DB, deleting key {1}'.\
                format(self.name, k))
         if self.userConfirm:

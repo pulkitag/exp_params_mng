@@ -1,6 +1,7 @@
 import sys
 sys.stdin = open('/dev/tty')
-from safely_exp.utils import auth_utils
+if 'safely_exp.utils.auth_utils' not in sys.path:
+  from safely_exp.utils import auth_utils
 
 import unittest
 

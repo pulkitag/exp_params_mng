@@ -274,3 +274,7 @@ class ParamsObject(object):
     assert cursor.count() == 1, 'Duplicates found'
     hashName = str(cursor.next()['_id'])
     return hashName
+
+  #Debugging tool
+  def _find_duplicates(self):
+    pass

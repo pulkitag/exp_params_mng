@@ -275,6 +275,59 @@ class ParamsObject(object):
     hashName = str(cursor.next()['_id'])
     return hashName
 
+  def _is_equal(self, e1, e2):
+    """
+    Determines if entry e1 is equal to e2 or not
+    """
+    e1 = copy.deepcopy(e1)
+    e2 = copy.deepcopy(e2)
+    del e1['_id']
+    del e2['_id']
+    k1 = set(e1.keys())
+    k2 = set(e2.keys())
+    isEq = k1.issubset(k2) and k2.issubset(k1)
+    if not isEq:
+      return False
+    for k in k1:
+      isEq = isEq and (e1[k] == e2[k])
+    return isEq
+
   #Debugging tool
   def _find_duplicates(self):
-    pass
+    """
+    Determines if two entries have the exact same value. 
+    In the usual functioning of the code this will never
+    happen, but a user may introduce inconsistencies in the
+    code which need to be resolved
+    """
+    allIds = self.get_all_ids()
+    data   = [self.from_id(_id) for _id in allIds]
+    #Iterate over the data to find if duplicate or not
+    for i in range(len(data)):
+      for j in range(i+1, len(data)):
+        isEq = self._is_equal(data[i], data[j])
+        if isEq:
+          print ('Duplicates Found', allIds[i], allIds[j])
+    print ('End of finding duplicates')
+
+  def _find_duplicate_id(self):
+    allIds = self.get_all_ids()
+    data   = [self.from_id(_id) for _id in allIds]
+    #Iterate over the data to find if duplicate or not
+    for i in range(len(data)):
+      for j in range(i+1, len(data)):
+        isEq = self._is_equal(data[i], data[j])
+        if isEq:
+          return allIds[i]
+    return None
+    
+  #Debugging tool
+  def _remove_duplicates(self, userConfirm=True):
+    while True:
+      delId = self._find_duplicate_id()
+      if delId is None:
+        print ('All duplicates removed')
+        return
+      self.delete_by_id(delId, userConfirm=userConfirm)
+        
+

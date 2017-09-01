@@ -4,6 +4,9 @@
 ```
 sudo apt-get install mongodb-server
 ```
+If the server is configured with a password, one can put the credentials in `db_config.py`. Note that `db_config.py` is
+not version controlled for security reasons. A sample script, `sample_db_config.py` is provided.
+Use `cp sample_db_config.py db_config.py` and set approrpriate authentication mechanism. 
 
 # Running
 

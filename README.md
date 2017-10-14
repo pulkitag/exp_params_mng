@@ -22,6 +22,12 @@ mongod server can be started as
 mongod --config /etc/mongod.conf
 ```
 
+In case, mongodb is run as a different user, use
+
+```
+sudo -H -u otheruser bash -c 'mongod --config /etc/mongod.conf' 
+```
+
 For enabling authorization, in the `.conf` file specify:
 ```
 security
@@ -47,4 +53,13 @@ To install code for running the tests automatically before a commit run
 ```
 ./scripts/install-hooks.bash
 ```
+
+# Giving user permissions
+
+Login into the mongo shell. 
+```
+mongo --port 27900 -u "myUserAdmin" -p "abc123" --authenticationDatabase "admin"
+```
+
+
 

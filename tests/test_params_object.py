@@ -1,6 +1,6 @@
 import unittest
-from exp_params_mng import params_object
 
+from exp_params_mng import params_object
 
 class DummyObject(params_object.ParamsObject):
   @property
@@ -18,8 +18,9 @@ class DummyObject(params_object.ParamsObject):
     dParams['c'] = 2
     dParams['d'] = 3.
     return dParams
-    
-## To test when a new default parameter is added
+  
+
+#To test when a new default parameter is added
 class DummyObject2(params_object.ParamsObject):
   @property
   def name(self):
@@ -41,7 +42,8 @@ class DummyObject2(params_object.ParamsObject):
     dParams['d'] = 3.
     dParams['e'] = 4
     return dParams
-    
+
+
 #Place a default parameter in ignoreHashKeys    
 class DummyObject3(params_object.ParamsObject):
   @property
@@ -110,7 +112,6 @@ class ExperimentObjectTests(unittest.TestCase):
     for i in obj1.get_all_ids():
       obj1.delete_by_id(i, userConfirm=False)
     
-
   def test_add_default_param_value(self):
     """
     Tests that added default parameter gets
@@ -136,7 +137,6 @@ class ExperimentObjectTests(unittest.TestCase):
     self.assertEqual(obj2.params['e'], 5)
     for i in obj1.get_all_ids():
       obj1.delete_by_id(i, userConfirm=False)
-      
   
   def test_default_to_ignore(self):
     """
@@ -159,6 +159,5 @@ class ExperimentObjectTests(unittest.TestCase):
     self.assertEqual(flag,1)
     
       
-  
 if __name__ == '__main__':
   unittest.main()

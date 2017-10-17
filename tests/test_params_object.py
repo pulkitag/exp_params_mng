@@ -1,8 +1,3 @@
-import sys
-sys.stdin = open('/dev/tty')
-if 'safely_exp.utils.auth_utils' not in sys.path:
-  from safely_exp.utils import auth_utils
-
 import unittest
 
 from exp_params_mng import params_object

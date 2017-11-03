@@ -9,7 +9,7 @@ class DummyObject(params_object.ParamsObject):
   
   @property
   def projectName(self):
-    return 'haptics'
+    return 'dummy'
 
   def default_params(self):
     dParams = {}
@@ -28,7 +28,7 @@ class DummyObject2(params_object.ParamsObject):
 
   @property
   def projectName(self):
-    return 'haptics' 
+    return 'dummy' 
 
   @property
   def ignoreHashKeys(self):
@@ -56,7 +56,7 @@ class DummyObject3(params_object.ParamsObject):
   
   @property
   def projectName(self):
-    return 'haptics'
+    return 'dummy'
 
   def default_params(self):
     dParams = {}

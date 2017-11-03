@@ -59,7 +59,11 @@ To install code for running the tests automatically before a commit run
 Login into the mongo shell. 
 ```
 mongo --port 27900 -u "myUserAdmin" -p "abc123" --authenticationDatabase "admin"
+#See roles of a user
+use db db_permissions
+db.getUser("username")
 ```
-
+Look at this [link](https://docs.mongodb.com/manual/tutorial/manage-users-and-roles/#grant-a-role) to grant
+permissions to a user. 
 
 

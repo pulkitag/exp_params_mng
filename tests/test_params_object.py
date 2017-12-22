@@ -1,5 +1,4 @@
 import unittest
-
 from exp_params_mng import params_object
 
 class DummyObject(params_object.ParamsObject):
@@ -64,6 +63,32 @@ class DummyObject3(params_object.ParamsObject):
     dParams['b'] = 'zz'
     dParams['c'] = 2
     dParams['d'] = 3.
+    return dParams
+
+#To test when a new default parameter is added
+class DummyObject4(params_object.ParamsObject):
+  @property
+  def name(self):
+    return 'DummyObject'
+
+  @property
+  def projectName(self):
+    return 'dummy' 
+
+  @property
+  def ignoreHashKeys(self):
+    return ['d']
+  
+  def default_params(self):
+    dParams = {}
+    dParams['a'] = 0
+    dParams['b'] = 'zz'
+    dParams['c'] = 2
+    dParams['d'] = 3.
+    dParams['e'] = 4
+    dParams['f'] = {}
+    dParams['f']['f1'] = 5
+    dParams['f']['f2'] = 6
     return dParams
 
 
@@ -158,6 +183,20 @@ class ExperimentObjectTests(unittest.TestCase):
       flag = 1
     self.assertEqual(flag,1)
     
+  def test_dict_entries(self):
+    obj1   = DummyObject4()
+    hashName1 = obj1.hash_name()
+    count1 = len(obj1.get_all_ids()) 
+    obj2 = DummyObject4(f={'f1': 7, 'f2': 8})
+    hashName2 = obj2.hash_name()
+    obj3 = DummyObject4(f={'f1': 5, 'f2': 6})
+    hashName3 = obj3.hash_name()
+    count3 = len(obj3.get_all_ids()) 
+    self.assertEqual(hashName1, hashName3)
+    self.assertEqual(count1 + 1, count3)
+    self.assertNotEqual(hashName1, hashName2)
+    obj1.delete_by_id(hashName1, userConfirm=False)
+    obj1.delete_by_id(hashName2, userConfirm=False)
       
 if __name__ == '__main__':
   unittest.main()

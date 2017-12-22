@@ -24,6 +24,7 @@ class CustomError(Exception):
   """
   pass
 
+
 class ParamsObject(object):
   __metaclass__ = abc.ABCMeta
   _RESERVED_PARAM_NAMES_ = ['name', 'usertag']
@@ -140,6 +141,7 @@ class ParamsObject(object):
       if i == 0:
         keyVal = dat[k]
       if not keyVal == dat[k]:
+        #print (keyVal, dat[k])
         return False
     return True
     
@@ -310,7 +312,12 @@ class ParamsObject(object):
           print ('Duplicates Found', allIds[i], allIds[j])
     print ('End of finding duplicates')
 
+  #Debugging tool
   def _find_duplicate_id(self):
+    """
+    Returns id of the entries which are 
+    the exact same entries
+    """
     allIds = self.get_all_ids()
     data   = [self.from_id(_id) for _id in allIds]
     #Iterate over the data to find if duplicate or not

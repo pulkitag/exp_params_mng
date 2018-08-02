@@ -10,8 +10,8 @@ import bson
 ##3rd party
 from pyhelper_fns import path_utils
 #Self imports
-from exp_params_mng import db_config
 try:
+  from exp_params_mng import db_config
   EXP_CLIENT = db_config.EXP_CLIENT
   #print ('IMPORTING FROM db_config')
 except:
@@ -265,6 +265,30 @@ class ParamsObject(object):
     for dat in cur:
       ids.append(str(dat['_id']))
     return ids
+    
+  def update_key_name(self):
+    print ('Setting all entries in {0} DB with value {1} for key {2}'.\
+               format(self.name, defParams[k], k))
+    if self.userConfirm:
+      try:
+        #python2
+        ip = raw_input('Proceed (Y/N):')
+      except:
+        #python3
+        ip = input('Proceed (Y/N):')
+      assert ip == 'Y' or ip == 'N', 'Invalid Input, Enter Y/N'
+    else:
+      ip = 'Y'
+    if ip == 'Y':
+      docs = self.dbColl.find()
+      for d in docs:
+        newd = copy.deepcopy(d)
+        del newd[k]
+        self.dbColl.update(d, newd) 
+      print ('Updated')
+    else:
+      print ('Not proceeding with update')
+      
  
   def hash_name(self):
     cursor = self.dbColl.find(self.hashableParams)

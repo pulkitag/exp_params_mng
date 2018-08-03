@@ -142,8 +142,69 @@ we needed initially.
 
 
 ## Deleting Irrelevant Parameters
+Maybe at the beginning you were not sure of what parameters would be required later and you start with following
+
+```python
+class NetParams(MyExampleObject):  
+  def default_params(self):
+    dParams = {}
+    dParams['netName'] = 'alexnet'
+    dParams['learningRate'] = 0.01
+    dParams['learningAlgo'] = 'SGD'
+    dParams['deepLearningPackage'] = 'caffe'
+    return dParams
+```
+You thought that you might need to experiment with different deep learning packages, but you realized at some point
+that the awesome *caffe* package is sufficient and you don't need anything else. You can simply drop it and modify
+`NetParams` as following:
+
+
+```python
+class NetParams(MyExampleObject):  
+  def default_params(self):
+    dParams = {}
+    dParams['netName'] = 'alexnet'
+    dParams['learningRate'] = 0.01
+    dParams['learningAlgo'] = 'SGD'
+    return dParams
+```
+
+That simple! 
+
+However, try dropping the *learningRate* parameter:
+
+```python
+class NetParams(MyExampleObject):  
+  def default_params(self):
+    dParams = {}
+    dParams['netName'] = 'alexnet'
+    dParams['learningAlgo'] = 'SGD'
+    return dParams
+```
+
+Because you ran experiments with different learning rates, this would not be possible and you will be prompted
+with an error/warning. 
+
 
 ## Quick Access to Favorite Set of Parameters
+While running many experiments you might realize that there is a set of parameters you love! For e.g. you really like:
+```python
+netParams  = NetParams(netName='resnet',learningRate=0.05, learningAlgo='RMSProp')
+```
+Instead of accessing your favorite set of parameters wouldn't it be awesome if one could just call these set of parameters
+by a nick-name? This is exactly what `usertag` does!
+
+Define the parameters as: 
+```python
+netParams  = NetParams(netName='resnet',learningRate=0.05, learningAlgo='RMSProp', usertag='myFavNet')
+```
+Now, next time, one can simply retrieve these parameters as:
+```python
+netParams  = NetParams(usertag='myFavNet')
+```
+
+
+
 
 
 

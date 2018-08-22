@@ -65,7 +65,7 @@ class DummyObject3(params_object.ParamsObject):
     dParams['d'] = 3.
     return dParams
 
-#To test when a new default parameter is added
+#To test when a new default dict parameter is added
 class DummyObject4(params_object.ParamsObject):
   @property
   def name(self):

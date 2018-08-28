@@ -10,13 +10,9 @@ import bson
 ##3rd party
 from pyhelper_fns import path_utils
 #Self imports
-try:
-  from exp_params_mng import db_config
-  EXP_CLIENT = db_config.EXP_CLIENT
-  #print ('IMPORTING FROM db_config')
-except:
-  EXP_CLIENT = pymongo.MongoClient('localhost:27900')
-  #print ('IMPORTING FROM DUNNO WHERE')
+from exp_params_mng import db_config
+
+EXP_CLIENT = db_config.EXP_CLIENT
 
 class CustomError(Exception):
   """

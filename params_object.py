@@ -227,6 +227,12 @@ class ParamsObject(object):
     assert type(_id) is bson.objectid.ObjectId  
     return self.dbColl.find({'_id': _id})
 
+  def find_by_usertag(self, usertag):
+    """
+    usertag: the usertag for finding the entry
+    """
+    return self.dbColl.find({'usertag': usertag})
+
   def from_id(self, _id):
     """ 
     Return the entry by the _id
@@ -253,6 +259,12 @@ class ParamsObject(object):
           print ('Not Deleted') 
       else:
         self.dbColl.delete_one(dat)
+
+  def delete_by_usertag(self, usertag, userConfirm=True):
+    ent = self.find_by_usertag(usertag)
+    assert ent.count() == 1
+    ent = ent.next()
+    self.delete_by_id(ent['_id'], userConfirm=userConfirm)
 
   def get_all_ids(self):
     """

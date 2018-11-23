@@ -7,12 +7,16 @@ import pickle
 import os
 from os import path as osp
 import bson
+import yaml
 ##3rd party
 from pyhelper_fns import path_utils
-#Self imports
-from exp_params_mng import db_config
 
-EXP_CLIENT = db_config.EXP_CLIENT
+#Read credentials from configuration file
+configFile = osp.join(os.environ.get('HOME'), '.exp_params_mng', 'config.yml')
+with open(configFile, 'rb') as fid:
+  config = yaml.load(fid) 
+EXP_CLIENT = pymongo.MongoClient('{0}:{1}'.format(config['host'], config['port']))
+EXP_CLIENT[config['database']].authenticate(config['user'], config['password'])
 
 class CustomError(Exception):
   """

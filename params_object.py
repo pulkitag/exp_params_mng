@@ -50,7 +50,7 @@ class ParamsObject(object):
   @property
   def dbColl(self):
     """
-      the collection storing the parameters on the server
+    The collection storing the parameters on the server
     """
     return self._dbColl
 

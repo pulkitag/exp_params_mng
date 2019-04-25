@@ -7,18 +7,69 @@ import pickle
 import os
 from os import path as osp
 import bson
+import yaml
+
 ##3rd party
 from pyhelper_fns import path_utils
-#Self imports
-from exp_params_mng import db_config
+from pyhelper_fns.config_utils import ConfigHelper
 
-EXP_CLIENT = db_config.EXP_CLIENT
 
 class CustomError(Exception):
   """
   Custom Exception
   """
   pass
+
+
+class ExpMngConfigHelper(ConfigHelper):
+  @property
+  def allOptKeys(self):
+    return ['EXP_PARAMS_MONGO_SERVER', 
+            'EXP_PARAMS_MONGO_PORT',
+            'EXP_PARAMS_AUTH_DB',
+            'EXP_PARAMS_USER',
+            'EXP_PARAMS_PWD'
+            ]
+
+
+def get_config():
+  """ Return configuration parameters."""
+  opts = {'EXP_PARAMS_MONGO_SERVER': '127.0.0.1',
+           'EXP_PARAMS_MONGO_PORT': None,
+           'EXP_PARAMS_AUTH_DB': 'admin',
+           'EXP_PARAMS_USER': 'default',
+           'EXP_PARAMS_PWD': 'default'
+          }
+  config = ExpMngConfigHelper(opts)
+  #check if the conf file exists
+  confDir = os.path.expanduser('~/.exp_params_mng')
+  if not os.path.exists(confDir):
+    os.makedirs(confDir)
+  confFile = os.path.join(confDir, 'config.yml')
+  #Update config from a config file if it exists
+  config.update_from_yaml(confFile)
+  #Update config from shell 
+  config.update_from_shell()
+  return config.opts
+
+
+def get_mongo_client():
+  """ 
+  Return the mongo client for storing experiment parameters.
+  
+  :param opts: options for constructing the client. 
+  """
+  opts = get_config()
+  port, server = opts['EXP_PARAMS_MONGO_PORT'],opts['EXP_PARAMS_MONGO_SERVER']
+  if port is None:
+    addr = server
+  else:
+    addr = '{0}:{1}'.format(server, port)
+  expClient = pymongo.MongoClient(addr)
+  dbName = opts['EXP_PARAMS_AUTH_DB']
+  expClient[dbName].authenticate(opts['EXP_PARAMS_USER'],
+                                 opts['EXP_PARAMS_PWD'])
+  return expClient
 
 
 class ParamsObject(object):
@@ -41,7 +92,8 @@ class ParamsObject(object):
     assert len(set(self._RESERVED_PARAM_NAMES_).intersection(set(defaultKeys))) == 0
     self._params['usertag'] = usertag
     #Initial the database collection
-    self._expDb  = EXP_CLIENT[self.projectName]
+    expClient = get_mongo_client()
+    self._expDb  = expClient[self.projectName]
     self._dbColl = self._expDb[self.name]
     #Check consistency
     self.userConfirm = userConfirm

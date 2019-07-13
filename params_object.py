@@ -354,6 +354,12 @@ class ParamsObject(object):
  
   def hash_name(self):
     cursor = self.dbColl.find(self.hashableParams)
+    usertag = self.hashableParams['usertag']
+    #mantain uniqueness of usertag
+    if usertag is not None:
+      utCursor = self.find_by_usertag(usertag)
+      if cursor.count() == 0 and utCursor.count() >0:
+        raise Exception('Usertag {0} already used'.format(usertag))
     if cursor.count() == 0:
       self.dbColl.insert_one(self.hashableParams)
       cursor = self.dbColl.find(self.hashableParams)
